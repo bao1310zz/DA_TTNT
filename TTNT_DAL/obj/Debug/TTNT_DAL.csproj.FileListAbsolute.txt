@@ -1,0 +1,12 @@
+C:\Users\Asus ROG Gaming\source\repos\DA_TTNT\TTNT_DAL\obj\Debug\TTNT_DAL.csproj.AssemblyReference.cache
+C:\Users\Asus ROG Gaming\source\repos\DA_TTNT\TTNT_DAL\obj\Debug\TTNT_DAL.csproj.CoreCompileInputs.cache
+C:\Users\Asus ROG Gaming\source\repos\DA_TTNT\TTNT_DAL\bin\Debug\TTNT_DAL.dll.config
+C:\Users\Asus ROG Gaming\source\repos\DA_TTNT\TTNT_DAL\bin\Debug\TTNT_DAL.dll
+C:\Users\Asus ROG Gaming\source\repos\DA_TTNT\TTNT_DAL\bin\Debug\TTNT_DAL.pdb
+C:\Users\Asus ROG Gaming\source\repos\DA_TTNT\TTNT_DAL\bin\Debug\EntityFramework.dll
+C:\Users\Asus ROG Gaming\source\repos\DA_TTNT\TTNT_DAL\bin\Debug\EntityFramework.SqlServer.dll
+C:\Users\Asus ROG Gaming\source\repos\DA_TTNT\TTNT_DAL\bin\Debug\EntityFramework.xml
+C:\Users\Asus ROG Gaming\source\repos\DA_TTNT\TTNT_DAL\bin\Debug\EntityFramework.SqlServer.xml
+C:\Users\Asus ROG Gaming\source\repos\DA_TTNT\TTNT_DAL\obj\Debug\TTNT_DAL.csproj.Up2Date
+C:\Users\Asus ROG Gaming\source\repos\DA_TTNT\TTNT_DAL\obj\Debug\TTNT_DAL.dll
+C:\Users\Asus ROG Gaming\source\repos\DA_TTNT\TTNT_DAL\obj\Debug\TTNT_DAL.pdb

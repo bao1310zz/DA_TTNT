@@ -9,10 +9,11 @@ namespace TTNT_DAL.Models
     {
         [Key]
         public int Id { get; set; }
-        public string Ten { get; set; } // Tên hiển thị (1, 2...)
+        public string Ten { get; set; } 
         public int X { get; set; }
         public int Y { get; set; }
-        public int Mau { get; set; }    // 0=Trắng, 1=Đỏ...
+        public int Mau { get; set; }
+        public double h { get; set; }
 
         public int BaiToanId { get; set; }
         [ForeignKey("BaiToanId")]

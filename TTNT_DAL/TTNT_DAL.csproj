@@ -54,6 +54,8 @@
     <Compile Include="AppDbContext.cs" />
     <Compile Include="GraphRepository.cs" />
     <Compile Include="Models\BaiToan.cs" />
+    <Compile Include="Models\BuocDuyet.cs" />
+    <Compile Include="Models\BuocHopGiai.cs" />
     <Compile Include="Models\Canh.cs" />
     <Compile Include="Models\Dinh.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
