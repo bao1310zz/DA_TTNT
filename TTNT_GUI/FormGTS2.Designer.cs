@@ -64,6 +64,7 @@
             // 
             // splitContainer1.Panel1
             // 
+            this.splitContainer1.Panel1.BackColor = System.Drawing.SystemColors.ActiveCaption;
             this.splitContainer1.Panel1.Controls.Add(this.label3);
             this.splitContainer1.Panel1.Controls.Add(this.cmbStart);
             this.splitContainer1.Panel1.Controls.Add(this.lstLog);
@@ -83,7 +84,7 @@
             // label3
             // 
             this.label3.AutoSize = true;
-            this.label3.Location = new System.Drawing.Point(122, 98);
+            this.label3.Location = new System.Drawing.Point(135, 98);
             this.label3.Name = "label3";
             this.label3.Size = new System.Drawing.Size(54, 16);
             this.label3.TabIndex = 8;
@@ -92,7 +93,7 @@
             // cmbStart
             // 
             this.cmbStart.FormattingEnabled = true;
-            this.cmbStart.Location = new System.Drawing.Point(52, 117);
+            this.cmbStart.Location = new System.Drawing.Point(72, 117);
             this.cmbStart.Name = "cmbStart";
             this.cmbStart.Size = new System.Drawing.Size(192, 24);
             this.cmbStart.TabIndex = 6;
@@ -109,7 +110,7 @@
             // 
             // trackBarTocDo
             // 
-            this.trackBarTocDo.Location = new System.Drawing.Point(95, 228);
+            this.trackBarTocDo.Location = new System.Drawing.Point(119, 228);
             this.trackBarTocDo.Maximum = 2000;
             this.trackBarTocDo.Minimum = 100;
             this.trackBarTocDo.Name = "trackBarTocDo";
@@ -121,7 +122,7 @@
             // label2
             // 
             this.label2.AutoSize = true;
-            this.label2.Location = new System.Drawing.Point(104, 198);
+            this.label2.Location = new System.Drawing.Point(128, 198);
             this.label2.Name = "label2";
             this.label2.Size = new System.Drawing.Size(85, 16);
             this.label2.TabIndex = 3;
@@ -129,7 +130,7 @@
             // 
             // btnChay
             // 
-            this.btnChay.Location = new System.Drawing.Point(52, 157);
+            this.btnChay.Location = new System.Drawing.Point(72, 157);
             this.btnChay.Name = "btnChay";
             this.btnChay.Size = new System.Drawing.Size(192, 38);
             this.btnChay.TabIndex = 2;
@@ -139,7 +140,7 @@
             // 
             // btnChonFile
             // 
-            this.btnChonFile.Location = new System.Drawing.Point(52, 57);
+            this.btnChonFile.Location = new System.Drawing.Point(72, 57);
             this.btnChonFile.Name = "btnChonFile";
             this.btnChonFile.Size = new System.Drawing.Size(192, 38);
             this.btnChonFile.TabIndex = 1;
