@@ -99,7 +99,7 @@
             // 
             this.btnLoad.Location = new System.Drawing.Point(33, 509);
             this.btnLoad.Name = "btnLoad";
-            this.btnLoad.Size = new System.Drawing.Size(102, 23);
+            this.btnLoad.Size = new System.Drawing.Size(102, 30);
             this.btnLoad.TabIndex = 2;
             this.btnLoad.Text = "Nhập File";
             this.btnLoad.UseVisualStyleBackColor = true;
@@ -109,7 +109,7 @@
             // 
             this.btnGiai.Location = new System.Drawing.Point(296, 508);
             this.btnGiai.Name = "btnGiai";
-            this.btnGiai.Size = new System.Drawing.Size(97, 23);
+            this.btnGiai.Size = new System.Drawing.Size(97, 31);
             this.btnGiai.TabIndex = 3;
             this.btnGiai.Text = "Giải / Tô màu";
             this.btnGiai.UseVisualStyleBackColor = true;
@@ -119,7 +119,7 @@
             // 
             this.btnXemLog.Location = new System.Drawing.Point(161, 509);
             this.btnXemLog.Name = "btnXemLog";
-            this.btnXemLog.Size = new System.Drawing.Size(100, 23);
+            this.btnXemLog.Size = new System.Drawing.Size(100, 30);
             this.btnXemLog.TabIndex = 4;
             this.btnXemLog.Text = "Xem Lời Giải";
             this.btnXemLog.UseVisualStyleBackColor = true;

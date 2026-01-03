@@ -1,5 +1,4 @@
-﻿using BUS_TTNT;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Drawing;
 using System.Drawing.Drawing2D;
@@ -107,79 +106,119 @@ namespace TTNT_GUI
         // ==========================================================
         private async void BtnGiai_Click(object sender, EventArgs e)
         {
+            // 1. KIỂM TRA ĐẦU VÀO
             if (_dsDinh.Count == 0)
             {
                 MessageBox.Show("Chưa có đồ thị! Vui lòng Load File trước.");
                 return;
             }
 
-            // Reset lại trạng thái
+            // 2. DỌN DẸP TRẠNG THÁI CŨ
             _frmLog.XoaLog();
-            _frmLog.Hide(); // Ẩn luôn bảng log nếu nó đang mở
+            _frmLog.Hide(); // Ẩn bảng log đi cho gọn
 
             foreach (var d in _dsDinh) d.Mau = 0; // Reset màu về trắng
-            picGraph.Invalidate();
+            picGraph.Invalidate(); // Vẽ lại hình trắng
 
+            // 3. XỬ LÝ THEO CHẾ ĐỘ CHỌN
             if (chkStep.Checked)
             {
-                // --- CHẾ ĐỘ 1: CHẠY VISUAL (MÔ PHỎNG) ---
-                // (Đã bỏ dòng _frmLog.Show() để không hiện bảng đen lên nữa)
-
+                // ========================================================
+                // TRƯỜNG HỢP A: CHẠY MÔ PHỎNG (VISUAL)
+                // ========================================================
                 btnGiai.Enabled = false;
-                _frmLog.GhiLog(">>> BẮT ĐẦU MÔ PHỎNG (VISUAL)...");
+                _frmLog.GhiLog(">>> BẮT ĐẦU MÔ PHỎNG (VISUAL BACKTRACKING)...");
 
-                // Gọi thuật toán đệ quy vẽ hình trực tiếp
-                // (Vẫn ghi log ngầm, nhưng không hiện bảng lên)
+                // Gọi hàm đệ quy chạy trực tiếp trên Form
+                // Số 4 ở đây là số màu thử nghiệm (m), bạn có thể tăng lên nếu cần
                 bool solved = await SolveBacktrackingVisual(4, new int[_dsDinh.Count], 0);
 
                 btnGiai.Enabled = true;
 
                 if (solved)
                 {
-                    _frmLog.GhiLog(">>> THÀNH CÔNG: Đã xong.");
+                    _frmLog.GhiLog(">>> THÀNH CÔNG: Đã tìm ra cách tô màu.");
                     MessageBox.Show("Mô phỏng hoàn tất!");
                 }
                 else
                 {
-                    _frmLog.GhiLog(">>> THẤT BẠI: Không tìm được màu phù hợp.");
-                    MessageBox.Show("Không tìm được giải pháp với số màu hiện tại.");
+                    _frmLog.GhiLog(">>> THẤT BẠI: Không đủ màu để tô.");
+                    MessageBox.Show("Không tìm được giải pháp với số màu hiện tại (Thử tăng m lên).");
                 }
             }
             else
             {
-                // --- CHẾ ĐỘ 2: CHẠY 3 LỚP (DATABASE & BUS) ---
+                // ========================================================
+                // TRƯỜNG HỢP B: CHẠY HỆ THỐNG (GỌI BUS & DATABASE)
+                // ========================================================
                 try
                 {
                     btnGiai.Enabled = false;
-                    _frmLog.GhiLog(">>> ĐANG CHẠY HỆ THỐNG (3 LỚP)...");
+                    Cursor.Current = Cursors.WaitCursor; // Hiện con chuột xoay xoay
 
-                    // 1. Lưu xuống DB
-                    string tenBai = "Problem_" + DateTime.Now.Ticks;
-                    _xuLy.LuuDuLieu(tenBai, _dsDinh, _dsCanh);
+                    _frmLog.GhiLog(">>> ĐANG CHẠY THUẬT TOÁN TỐI ƯU (BACKTRACKING)...");
 
-                    // 2. Lấy ID
+                    // BƯỚC 1: Lưu xuống DB (Chạy luồng phụ để không đơ máy)
+                    string tenBai = "ToiUu_" + DateTime.Now.Ticks;
+                    await Task.Run(() => _xuLy.LuuDuLieu(tenBai, _dsDinh, _dsCanh));
+
+                    // Lấy ID bài vừa lưu
                     var baiToan = _xuLy.LayHetBaiToan().FirstOrDefault();
                     int idBai = baiToan.Id;
 
-                    // 3. Gọi thuật toán (Tham lam)
-                    bool kq = _xuLy.ChayThamLam(idBai);
+                    // BƯỚC 2: Gọi thuật toán TỐI ƯU (Backtracking)
+                    bool ketQua = false;
 
-                    if (kq)
+                    // Vì thuật toán tối ưu chạy lâu, đẩy ra luồng background
+                    await Task.Run(() =>
                     {
-                        // 4. Load kết quả
+                        ketQua = _xuLy.ChayToiUu(idBai);
+                    });
+
+                    // BƯỚC 3: Xử lý kết quả trả về
+                    if (ketQua)
+                    {
+                        // Load lại dữ liệu đã tô màu từ DB
                         var res = _xuLy.LayMotBai(idBai);
                         _dsDinh = res.DanhSachDinh.ToList();
                         _dsCanh = res.DanhSachCanh.ToList();
 
-                        picGraph.Invalidate(); // Vẽ lại
+                        picGraph.Invalidate(); // Vẽ lại hình lên màn hình
+
+                        // --- GHI LỜI GIẢI CHI TIẾT VÀO LOG (Để xem sau) ---
+                        _frmLog.GhiLog(">>> KẾT QUẢ CHI TIẾT:");
+                        foreach (var d in _dsDinh)
+                        {
+                            string tenMau = GetColorName(d.Mau);
+                            _frmLog.GhiLog($" - Đỉnh {d.Ten}: {tenMau}");
+                        }
 
                         int maxColor = _dsDinh.Max(d => d.Mau);
-                        _frmLog.GhiLog($"Hoàn tất! Số màu dùng: {maxColor}");
-                        MessageBox.Show($"Đã giải xong! Số màu tối ưu: {maxColor}");
+                        _frmLog.GhiLog("----------------------------------");
+                        _frmLog.GhiLog($"=> TỔNG KẾT: Số màu tối ưu là {maxColor}");
+
+                        MessageBox.Show(
+                            $"Đã giải xong theo cách Tối Ưu!\nSố màu ít nhất cần dùng: {maxColor}\n(Bấm 'Xem Lời Giải' để xem chi tiết)",
+                            "Thành công",
+                            MessageBoxButtons.OK,
+                            MessageBoxIcon.Information
+                        );
+                    }
+                    else
+                    {
+                        _frmLog.GhiLog(">>> THẤT BẠI: Thuật toán không tìm ra lời giải.");
+                        MessageBox.Show("Không tìm được phương án tô màu.");
                     }
                 }
-                catch (Exception ex) { MessageBox.Show("Lỗi hệ thống: " + ex.Message); }
-                finally { btnGiai.Enabled = true; }
+                catch (Exception ex)
+                {
+                    MessageBox.Show("Lỗi hệ thống: " + ex.Message);
+                }
+                finally
+                {
+                    btnGiai.Enabled = true;
+                    Cursor.Current = Cursors.Default;
+                }
             }
         }
         private void BtnXemLog_Click(object sender, EventArgs e)

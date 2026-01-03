@@ -62,19 +62,55 @@
     <Compile Include="Form1.Designer.cs">
       <DependentUpon>Form1.cs</DependentUpon>
     </Compile>
+    <Compile Include="FormDFS.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="FormDFS.Designer.cs">
+      <DependentUpon>FormDFS.cs</DependentUpon>
+    </Compile>
+    <Compile Include="FormGTS2.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="FormGTS2.Designer.cs">
+      <DependentUpon>FormGTS2.cs</DependentUpon>
+    </Compile>
     <Compile Include="FrmLog.cs">
       <SubType>Form</SubType>
     </Compile>
     <Compile Include="FrmLog.Designer.cs">
       <DependentUpon>FrmLog.cs</DependentUpon>
     </Compile>
+    <Compile Include="frm_HopGiai.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="frm_HopGiai.Designer.cs">
+      <DependentUpon>frm_HopGiai.cs</DependentUpon>
+    </Compile>
+    <Compile Include="frm_INDO.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="frm_INDO.Designer.cs">
+      <DependentUpon>frm_INDO.cs</DependentUpon>
+    </Compile>
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <EmbeddedResource Include="Form1.resx">
       <DependentUpon>Form1.cs</DependentUpon>
     </EmbeddedResource>
+    <EmbeddedResource Include="FormDFS.resx">
+      <DependentUpon>FormDFS.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="FormGTS2.resx">
+      <DependentUpon>FormGTS2.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="FrmLog.resx">
       <DependentUpon>FrmLog.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="frm_HopGiai.resx">
+      <DependentUpon>frm_HopGiai.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="frm_INDO.resx">
+      <DependentUpon>frm_INDO.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>
