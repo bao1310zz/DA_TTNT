@@ -6,20 +6,16 @@ using System.Linq;
 
 
 
-namespace BUS_TTNT
+namespace TTNT_BUS
 {
     public class XuLyDoThi
     {
-        // Gọi xuống kho dữ liệu (DAL)
         private GraphRepository _khoDuLieu = new GraphRepository();
-
-        // 1. Lấy lịch sử bài toán (để hiện lên Menu chọn bài cũ)
         public List<BaiToan> LayHetBaiToan()
         {
             return _khoDuLieu.LayLichSu();
         }
 
-        // 2. Lấy chi tiết 1 bài toán (để vẽ lại lên màn hình)
         public BaiToan LayMotBai(int id)
         {
             return _khoDuLieu.LayChiTiet(id);
@@ -191,6 +187,152 @@ namespace BUS_TTNT
                 }
             }
             return false;
+        }
+        public List<BuocDuyet> TimKiemINDO(List<Dinh> dsDinh, List<Canh> dsCanh, int startId, int endId)
+        {
+            List<BuocDuyet> kichBan = new List<BuocDuyet>();
+
+            // INDO: Tăng dần giới hạn độ sâu (Limit)
+            int maxDepth = dsDinh.Count + 2;
+            bool timThay = false;
+
+            for (int limit = 0; limit < maxDepth; limit++)
+            {
+                // Bước 1: Reset (Đặc trưng của INDO)
+                kichBan.Add(new BuocDuyet
+                {
+                    IsReset = true,
+                    ThongBao = $"--- [Lặp] Giới hạn độ sâu (Limit) = {limit} ---"
+                });
+
+                // Bước 2: Gọi đệ quy DLS
+                List<int> currentPath = new List<int>();
+                if (DLS(dsDinh, dsCanh, startId, endId, 0, limit, currentPath, kichBan))
+                {
+                    timThay = true;
+                    break; // Tìm thấy thì dừng ngay
+                }
+                else
+                {
+                    kichBan.Add(new BuocDuyet
+                    {
+                        ThongBao = $"-> Limit {limit}: Không tìm thấy. Tăng độ sâu..."
+                    });
+                }
+            }
+
+            if (!timThay)
+            {
+                kichBan.Add(new BuocDuyet { ThongBao = "❌ KẾT THÚC: Không tìm thấy đường đi." });
+            }
+
+            return kichBan;
+        }
+
+        // Hàm phụ trợ đệ quy (DLS)
+        private bool DLS(List<Dinh> dsDinh, List<Canh> dsCanh, int uId, int targetId, int depth, int limit, List<int> path, List<BuocDuyet> kichBan)
+        {
+            var u = dsDinh.FirstOrDefault(d => d.Id == uId);
+            if (u == null) return false;
+
+            path.Add(uId);
+
+            // Ghi nhận bước đi: Đang xét u (Màu vàng = 1)
+            kichBan.Add(new BuocDuyet
+            {
+                DinhId = uId,
+                Mau = 1,
+                ThongBao = $"   - Xét {u.Ten} (Độ sâu: {depth})"
+            });
+
+            // 1. Kiểm tra Đích
+            if (uId == targetId)
+            {
+                kichBan.Add(new BuocDuyet
+                {
+                    DinhId = uId,
+                    Mau = 2, // Màu đỏ
+                    ThongBao = $"✅ TÌM THẤY ĐÍCH {u.Ten} tại độ sâu {depth}!"
+                });
+                return true;
+            }
+
+            // 2. Chạm giới hạn -> Dừng
+            if (depth >= limit)
+            {
+                path.Remove(uId);
+                return false;
+            }
+
+            // 3. Duyệt láng giềng
+            var neighbors = dsCanh
+                .Where(c => c.TuDinh == uId)
+                .OrderBy(c => c.DenDinh)
+                .Select(c => c.DenDinh).ToList();
+
+            foreach (var vId in neighbors)
+            {
+                if (!path.Contains(vId)) // Tránh đi lặp
+                {
+                    if (DLS(dsDinh, dsCanh, vId, targetId, depth + 1, limit, path, kichBan))
+                    {
+                        // Khi đệ quy quay về mà báo tìm thấy -> Tô màu đỏ đường về
+                        kichBan.Add(new BuocDuyet { DinhId = uId, Mau = 2, ThongBao = "" });
+                        return true;
+                    }
+                }
+            }
+
+            // Backtrack
+            path.Remove(uId);
+            return false;
+        }
+        public List<BuocDuyet> ChayDFS(List<Dinh> dsDinh, List<Canh> dsCanh, int idBatDau)
+        {
+            var ketQua = new List<BuocDuyet>();
+            var daDuyet = new HashSet<int>();
+
+            // Stack lưu cặp: <Đỉnh Đang Xét, Đỉnh Cha>
+            // Cha = -1 nghĩa là đỉnh đầu tiên, không có cha
+            var stack = new Stack<Tuple<int, int>>();
+            stack.Push(new Tuple<int, int>(idBatDau, -1));
+
+            while (stack.Count > 0)
+            {
+                var item = stack.Pop();
+                int u = item.Item1;      // Đỉnh con
+                int parent = item.Item2; // Đỉnh cha
+
+                if (!daDuyet.Contains(u))
+                {
+                    daDuyet.Add(u);
+
+                    // Ghi lại bước đi, kèm thông tin CHA để tí nữa vẽ đường nối
+                    ketQua.Add(new BuocDuyet
+                    {
+                        DinhId = u,
+                        TuDinh = parent,   // <--- Lưu cha vào đây
+                        ThongBao = $"Duyệt đỉnh {u} (đi từ {parent})"
+                    });
+
+                    // Tìm hàng xóm
+                    var dsKe = new List<int>();
+                    foreach (var c in dsCanh)
+                    {
+                        if (c.TuDinh == u) dsKe.Add(c.DenDinh);
+                        if (c.DenDinh == u) dsKe.Add(c.TuDinh);
+                    }
+
+                    // Sắp xếp giảm dần và đẩy vào Stack kèm theo CHA là u
+                    var neighbors = dsKe.Where(x => !daDuyet.Contains(x))
+                                        .OrderByDescending(x => x).ToList();
+                    foreach (var v in neighbors)
+                    {
+                        stack.Push(new Tuple<int, int>(v, u)); // <--- Nhớ lưu u làm cha
+                    }
+                }
+            }
+            return ketQua;
         }
     }
 }
